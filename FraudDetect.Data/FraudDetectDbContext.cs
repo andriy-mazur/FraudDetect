@@ -3,13 +3,24 @@
     using FraudDetect.Interface.Model;
     using Microsoft.EntityFrameworkCore;
     using System.Configuration;
-    using System.Diagnostics;
 
-    public class FraudDetectDbContext : DbContext, IFraudDetectDbContext
+    public class FraudDetectDbContext : DbContext
     {
         public DbSet<Request> Requests { get; set; }
         public DbSet<Response> Responses { get; set; }
-        public DbSet<Response> Logs { get; set; }
+        public DbSet<Log> Logs { get; set; }
+
+        public FraudDetectDbContext(DbContextOptions<FraudDetectDbContext> options) : base(options)
+        {
+
+        }
+
+        //private string connectionString;
+
+        //public FraudDetectDbContext(string connectionString) : base()
+        //{
+        //    this.connectionString = connectionString;
+        //}
 
         public void Save()
         {
@@ -18,10 +29,15 @@
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var a = ConfigurationManager.ConnectionStrings["FraudDetect"].ConnectionString;
-            Debug.Write(a);
-            options.UseSqlServer(ConfigurationManager.ConnectionStrings["FraudDetect"].ConnectionString);
-            //options.UseSqlServer("Server=.;Database=Fraud;Trusted_Connection=True;");
+            //options.UseSqlServer("Server=127.0.0.1;Database=fraud;User Id=fd2020;Password=Mpg0*1Kwh07w;");
+
+            options.UseSqlServer("Server =.; Database = Fraud; Trusted_Connection = True;");
+
+
+            //var a = ConfigurationManager.ConnectionStrings["FraudDetect"];
+            //var b = a.ConnectionString;
+            //options.UseSqlServer(ConfigurationManager.ConnectionStrings["FraudDetect"].ConnectionString);
+            //options.UseSqlServer(connectionString);
             //options.UseSqlServer("Server=127.0.0.1;Database=fraud;User Id=fd2020;Password=Mpg0*1Kwh07w;");
         }
     }

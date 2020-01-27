@@ -1,16 +1,16 @@
-﻿namespace FraudDetect.Data
-{
-    using FraudDetect.Interface.Model;
-    using Microsoft.EntityFrameworkCore;
+﻿//namespace FraudDetect.Data
+//{
+//    using FraudDetect.Interface.Model;
+//    using Microsoft.EntityFrameworkCore;
 
-    public interface IFraudDetectDbContext
-    {
-        DbSet<Request> Requests { get; set; }
+//    public interface IFraudDetectDbContext
+//    {
+//        DbSet<Request> Requests { get; set; }
 
-        DbSet<Response> Responses { get; set; }
+//        DbSet<Response> Responses { get; set; }
 
-        DbSet<Response> Logs { get; set; }
+//        DbSet<Log> Logs { get; set; }
 
-        void Save();
-    }
-}
+//        void Save();
+//    }
+//}

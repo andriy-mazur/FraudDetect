@@ -1,8 +1,10 @@
 namespace FraudDetect.WebApi
 {
+    using FraudDetect.Data;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Server.Kestrel.Core;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -20,9 +22,12 @@ namespace FraudDetect.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<FraudDetectDbContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("FraudDetect"));
+            });
+
             services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
 
-            //services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
             services.AddControllers();
 
             // Register the Swagger generator, defining 1 or more Swagger documents

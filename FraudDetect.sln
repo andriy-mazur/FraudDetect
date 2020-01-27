@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FraudDetect.Ui", "FraudDete
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FraudDetect.Interface", "FraudDetect.Interface\FraudDetect.Interface.csproj", "{682FDD5D-E83A-4781-9A2B-C99E255A2913}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FraudDetect.Data", "FraudDetect.Data\FraudDetect.Data.csproj", "{65CBF251-B75B-4DBB-93DA-2E2554A70FC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FraudDetect.Data", "FraudDetect.Data\FraudDetect.Data.csproj", "{65CBF251-B75B-4DBB-93DA-2E2554A70FC1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EB8B7B3-F8A5-4A03-A128-F57AB3C88C8D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
