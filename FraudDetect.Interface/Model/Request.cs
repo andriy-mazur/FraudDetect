@@ -14,6 +14,12 @@
         [Required]
         public DateTime RequestDate { get; set; }
 
+        [MaxLength(1000)]
+        public string ParseError { get; set; }
+
+        [MaxLength(40)]
+        public string ExternalId { get; set; }
+
         [MaxLength(15)]
         public string Ip { get; set; }
 
@@ -37,5 +43,8 @@
 
         [MaxLength(200)]
         public string Address { get; set; }
+
+        [MaxLength(32000)]
+        public string Json { get; set; }
     }
 }

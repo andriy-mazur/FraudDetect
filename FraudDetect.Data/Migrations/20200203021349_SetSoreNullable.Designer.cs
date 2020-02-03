@@ -4,14 +4,16 @@ using FraudDetect.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FraudDetect.Data.Migrations
 {
     [DbContext(typeof(FraudDetectDbContext))]
-    partial class FraudDetectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200203021349_SetSoreNullable")]
+    partial class SetSoreNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,8 +68,8 @@ namespace FraudDetect.Data.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("ExternalId")
-                        .HasColumnType("nvarchar(40)")
-                        .HasMaxLength(40);
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(100)")

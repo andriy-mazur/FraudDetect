@@ -16,7 +16,9 @@
         [Required]
         public DateTime ResponseDate { get; set; }
 
+        public int? Score { get; set; }
+
         [MaxLength(32000)]
-        public string JsonResponse { get; set; }
+        public string Json { get; set; }
     }
 }

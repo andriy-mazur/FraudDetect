@@ -22,9 +22,9 @@ namespace FraudDetect.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<FraudDetectDbContext>(options => {
-                options.UseSqlServer(Configuration.GetConnectionString("FraudDetect"));
-            });
+            //services.AddDbContext<FraudDetectDbContext>(options => {
+            //    options.UseSqlServer(Configuration.GetConnectionString("FraudDetect"));
+            //});
 
             services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
 

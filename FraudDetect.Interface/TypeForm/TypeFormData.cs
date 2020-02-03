@@ -14,7 +14,7 @@
         public string EventType { get; set; }
 
         [JsonProperty(PropertyName = "form_response")]
-        private TypeFormFormResponse FormResponse { get; set; }
+        public TypeFormFormResponse FormResponse { get; set; }
     }
 
     public class TypeFormFormResponse
@@ -65,7 +65,7 @@
         public string FiledType { get; set; }
 
         [JsonProperty(PropertyName = "ref")]
-        public Guid Ref { get; set; }
+        public string Ref { get; set; }
     }
 
     public class TypeFormAnswerConverter : JsonConverter
@@ -89,29 +89,20 @@
             if (obj != null && obj.Count > 1 && obj.ContainsKey("type"))
             {
                 var propertyType = obj["type"].Value<string>();
-                return new TypeFormAnswer
-                    {FieldName = string.Empty, FieldValue = obj[propertyType].Value<string>()};
+
+                var result = new TypeFormAnswer();
+
+                if (propertyType.Equals("email", StringComparison.InvariantCultureIgnoreCase) ||
+                    propertyType.Equals("number", StringComparison.InvariantCultureIgnoreCase) ||
+                    propertyType.Equals("text", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    result.FieldValue = obj[propertyType].Value<string>();
+                }
+
+                result.Field = obj["field"].ToObject<TypeFormField>();
+
+                return result;
             }
-
-            //try
-            //{
-            //    var response = new TypeFormAnswer();
-
-            //    reader.Read();
-            //    reader.Read();
-            //    response.FieldName = reader.Value.ToString();
-            //    reader.Read();
-            //    reader.Read();
-            //    response.FieldValue = reader.Value.ToString();
-
-            //    //reader.Close();
-
-            //    return response;
-            //}
-            //catch
-            //{
-            //    return null;
-            //}
 
             return null;
         }
@@ -128,5 +119,7 @@
         public string FieldName { get; set; }
 
         public string FieldValue { get; set; }
+
+        public TypeFormField Field { get; set; }
     }
 }

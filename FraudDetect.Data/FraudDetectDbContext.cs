@@ -10,10 +10,10 @@
         public DbSet<Response> Responses { get; set; }
         public DbSet<Log> Logs { get; set; }
 
-        public FraudDetectDbContext(DbContextOptions<FraudDetectDbContext> options) : base(options)
-        {
+        //public FraudDetectDbContext(DbContextOptions<FraudDetectDbContext> options) : base(options)
+        //{
 
-        }
+        //}
 
         //private string connectionString;
 
@@ -29,9 +29,9 @@
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            //options.UseSqlServer("Server=127.0.0.1;Database=fraud;User Id=fd2020;Password=Mpg0*1Kwh07w;");
-
-            options.UseSqlServer("Server =.; Database = Fraud; Trusted_Connection = True;");
+            options.UseSqlServer("Server=frauddetectdbserver.database.windows.net;Database=fraud;User Id=andriy;Password=Mpg0*1Kwh07w;");
+            //options.UseSqlServer("Server=127.0.0.1;Database=fraud;User Id=andriy;Password=Mpg0*1Kwh07w;");
+            //options.UseSqlServer("Server =.; Database = Fraud; Trusted_Connection = True;");
 
 
             //var a = ConfigurationManager.ConnectionStrings["FraudDetect"];

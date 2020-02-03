@@ -2,6 +2,7 @@
 {
     using System;
     using System.Configuration;
+    using System.Linq;
     using FraudDetect.Data;
     using FraudDetect.Interface;
     using FraudDetect.Interface.Model;
@@ -17,16 +18,14 @@
     {
         //private readonly ILogger<FraudController> _logger;
         //private readonly IConfiguration _config;
-        private readonly FraudDetectDbContext context;
+        //private readonly FraudDetectDbContext context;
+        private readonly IBureauService bureauService;
 
         public FraudController(
-            //ILogger<FraudController> logger, 
-            //IConfiguration config,
-            FraudDetectDbContext context)
+            IBureauService bureauService
+            )
         {
-            //_logger = logger;
-            //_config = config;
-            this.context = context;
+            this.bureauService = bureauService;
         }
 
         [HttpPost]
@@ -54,17 +53,78 @@
         [HttpPost("typeform")]
         public void TypeFormInput(string payload)
         {
-            var log = new Log
+            using var context = new FraudDetectDbContext();
+
+            var date = DateTime.Now;
+
+            //var log = new Log
+            //{
+            //    LogDate = date,
+            //    Source = SourceType.TypeForm.ToString(),
+            //    Message = payload
+            //};
+
+            //context.Logs.Add(log);
+            //context.Save();
+
+            TypeFormData typeFormData;
+            string parseError = null;
+
+            try
             {
-                LogDate = DateTime.Now,
-                Source = SourceType.TypeForm.ToString(),
-                Message = payload
+                typeFormData = JsonConvert.DeserializeObject<TypeFormData>(payload);
+            }
+            catch(Exception ex)
+            {
+                typeFormData = null;
+                parseError = ex.Message;
+            }
+
+            var request = new Request
+            {
+                ExternalId = typeFormData?.EventId,
+                RequestDate = date,
+                Json = payload,
+                ParseError = parseError,
+                FirstName = GetTypeFormField(typeFormData, "38da8cda11ee96bd"),
+                LastName = GetTypeFormField(typeFormData, "992fd7d939ac16f6"),
+                Phone = GetTypeFormField(typeFormData, "af64d6df-4899-47b5-bf0e-ae900d754dbf"),
+                Email = GetTypeFormField(typeFormData, "de28403292510ddc"),
             };
 
-            context.Logs.Add(log);
+            context.Requests.Add(request);
             context.Save();
-
-            var request = JsonConvert.DeserializeObject<TypeFormData>(payload);
         }
+
+        private string GetTypeFormField(TypeFormData data, string questionRef)
+        {
+            try
+            {
+                if (data.FormResponse?.Answers == null) return null;
+
+                var answer = data.FormResponse.Answers.FirstOrDefault(a =>
+                    a.Field.Ref.Equals(questionRef, StringComparison.InvariantCultureIgnoreCase));
+
+                return answer?.FieldValue;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        //private int GetFieldPos(TypeFormData data, string questionRef)
+        //{
+        //    var index = 0;
+
+        //    foreach (var field in data.FormResponse.Definition.Fields)
+        //    {
+        //        if (field.Ref.Equals(questionRef, StringComparison.InvariantCultureIgnoreCase)) return index;
+
+        //        index++;
+        //    }
+
+        //    return -1;
+        //}
     }
 }
