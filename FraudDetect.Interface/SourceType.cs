@@ -3,6 +3,7 @@
     public enum SourceType
     {
         None,
-        TypeForm
+        TypeForm,
+        Ekata
     }
 }

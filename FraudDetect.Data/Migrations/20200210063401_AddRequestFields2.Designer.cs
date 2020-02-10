@@ -4,14 +4,16 @@ using FraudDetect.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FraudDetect.Data.Migrations
 {
     [DbContext(typeof(FraudDetectDbContext))]
-    partial class FraudDetectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200210063401_AddRequestFields2")]
+    partial class AddRequestFields2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,7 +129,7 @@ namespace FraudDetect.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasMaxLength(32000);
 
-                    b.Property<int>("Request_Id")
+                    b.Property<int?>("RequestId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ResponseDate")
@@ -138,7 +140,7 @@ namespace FraudDetect.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Request_Id");
+                    b.HasIndex("RequestId");
 
                     b.ToTable("Responses");
                 });
@@ -147,9 +149,7 @@ namespace FraudDetect.Data.Migrations
                 {
                     b.HasOne("FraudDetect.Interface.Model.Request", "Request")
                         .WithMany()
-                        .HasForeignKey("Request_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RequestId");
                 });
 #pragma warning restore 612, 618
         }

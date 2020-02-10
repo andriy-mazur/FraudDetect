@@ -1,15 +1,13 @@
 ﻿namespace FraudDetect.WebApi.Controllers
 {
     using System;
-    using System.Configuration;
     using System.Linq;
     using FraudDetect.Data;
     using FraudDetect.Interface;
     using FraudDetect.Interface.Model;
     using FraudDetect.Interface.TypeForm;
+    using FraudDetect.WebApi.Services;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
 
     [ApiController]
@@ -23,58 +21,57 @@
 
         public FraudController(
             IBureauService bureauService
-            )
+        )
         {
             this.bureauService = bureauService;
         }
 
-        [HttpPost]
-        public FraudResponse Get(FraudRequest request)
-        {
-            if(request == null) return new FraudResponse{IsFraud = true, Description = "Empty request"};
-            
-            if (request.FirstName.Equals("Andriy", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return new FraudResponse
-                {
-                    IsFraud = true,
-                    Description = "First name is `Andriy` and we are always trust to Andriy!"
-                };
-            }
+        //[HttpPost]
+        //public FraudResponse Get(FraudRequest request)
+        //{
+        //    if (request == null) return new FraudResponse {IsFraud = true, Description = "Empty request"};
 
-            return new FraudResponse
-            {
-                IsFraud = false,
-                Description =
-                    $"First name is {request.FirstName} and it is not `Andriy`. We are trusting only to Andriy!"
-            };
-        }
+        //    if (request.FirstName.Equals("Andriy", StringComparison.InvariantCultureIgnoreCase))
+        //    {
+        //        return new FraudResponse
+        //        {
+        //            IsFraud = true,
+        //            Description = "First name is `Andriy` and we are always trust to Andriy!"
+        //        };
+        //    }
+
+        //    return new FraudResponse
+        //    {
+        //        IsFraud = false,
+        //        Description =
+        //            $"First name is {request.FirstName} and it is not `Andriy`. We are trusting only to Andriy!"
+        //    };
+        //}
 
         [HttpPost("typeform")]
         public void TypeFormInput(string payload)
         {
-            using var context = new FraudDetectDbContext();
-
             var date = DateTime.Now;
 
-            //var log = new Log
-            //{
-            //    LogDate = date,
-            //    Source = SourceType.TypeForm.ToString(),
-            //    Message = payload
-            //};
+            DbLog.LogAsync(payload, SourceType.TypeForm, date);
 
-            //context.Logs.Add(log);
-            //context.Save();
+            var request = ParseAndGetRequest(payload, date);
 
+            var bureauResult = bureauService.GetScoreAsync(request).Result;
+
+
+        }
+
+        private Request ParseAndGetRequest(string json, DateTime date)
+        {
             TypeFormData typeFormData;
             string parseError = null;
 
             try
             {
-                typeFormData = JsonConvert.DeserializeObject<TypeFormData>(payload);
+                typeFormData = JsonConvert.DeserializeObject<TypeFormData>(json);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 typeFormData = null;
                 parseError = ex.Message;
@@ -84,16 +81,19 @@
             {
                 ExternalId = typeFormData?.EventId,
                 RequestDate = date,
-                Json = payload,
+                Json = json,
                 ParseError = parseError,
                 FirstName = GetTypeFormField(typeFormData, "38da8cda11ee96bd"),
                 LastName = GetTypeFormField(typeFormData, "992fd7d939ac16f6"),
                 Phone = GetTypeFormField(typeFormData, "af64d6df-4899-47b5-bf0e-ae900d754dbf"),
-                Email = GetTypeFormField(typeFormData, "de28403292510ddc"),
+                Email = GetTypeFormField(typeFormData, "de28403292510ddc")
             };
 
+            using var context = new FraudDetectDbContext();
             context.Requests.Add(request);
             context.Save();
+
+            return request;
         }
 
         private string GetTypeFormField(TypeFormData data, string questionRef)
@@ -112,19 +112,5 @@
                 return null;
             }
         }
-
-        //private int GetFieldPos(TypeFormData data, string questionRef)
-        //{
-        //    var index = 0;
-
-        //    foreach (var field in data.FormResponse.Definition.Fields)
-        //    {
-        //        if (field.Ref.Equals(questionRef, StringComparison.InvariantCultureIgnoreCase)) return index;
-
-        //        index++;
-        //    }
-
-        //    return -1;
-        //}
     }
 }

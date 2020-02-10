@@ -20,6 +20,9 @@
         [MaxLength(40)]
         public string ExternalId { get; set; }
 
+        [MaxLength(40)]
+        public string Client { get; set; }
+
         [MaxLength(15)]
         public string Ip { get; set; }
 
@@ -43,6 +46,9 @@
 
         [MaxLength(200)]
         public string Address { get; set; }
+
+        [MaxLength(20)]
+        public string PostalCode { get; set; }
 
         [MaxLength(32000)]
         public string Json { get; set; }
