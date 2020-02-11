@@ -4,24 +4,25 @@
     using FraudDetect.Data;
     using FraudDetect.Interface;
     using FraudDetect.Interface.Model;
+    using FraudDetect.Interface.Services;
 
-    public static class DbLog
+    public class DbLog : IDbLog
     {
-        public static void LogAsync(string json, SourceType source)
+        public void LogAsync(string text, SourceType source)
         {
-            LogAsync(json, source, DateTime.Now);
+            LogAsync(text, source, DateTime.Now);
         }
 
 
-        public static async void LogAsync(string json, SourceType source, DateTime date)
+        public async void LogAsync(string text, SourceType source, DateTime logDate)
         {
             await using var context = new FraudDetectDbContext();
 
             var log = new Log
             {
-                LogDate = date,
+                LogDate = logDate,
                 Source = source.ToString(),
-                Message = json
+                Message = text
             };
 
             context.Logs.Add(log);

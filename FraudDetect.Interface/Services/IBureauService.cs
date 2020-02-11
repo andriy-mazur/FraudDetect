@@ -1,4 +1,4 @@
-﻿namespace FraudDetect.Interface
+﻿namespace FraudDetect.Interface.Services
 {
     using System.Threading.Tasks;
     using FraudDetect.Interface.Model;

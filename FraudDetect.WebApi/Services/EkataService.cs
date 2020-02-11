@@ -7,10 +7,19 @@
     using FraudDetect.Data;
     using FraudDetect.Interface;
     using FraudDetect.Interface.Model;
+    using FraudDetect.Interface.Services;
     using Newtonsoft.Json.Linq;
 
     public class EkataService : IBureauService
     {
+        private readonly IDbLog dbLog;
+
+        public EkataService(IDbLog dbLog)
+        {
+            this.dbLog = dbLog;
+        }
+
+
         public async Task<Response> GetScoreAsync(Request request)
         {
             if (request == null) return null;
@@ -67,7 +76,7 @@
             {
                 response.IsSuccess = false;
 
-                DbLog.LogAsync(ex.Message, SourceType.Ekata);
+                dbLog.LogAsync(ex.Message, SourceType.Ekata);
             }
 
             return response;

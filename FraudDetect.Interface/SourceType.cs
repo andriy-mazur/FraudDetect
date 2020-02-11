@@ -4,6 +4,7 @@
     {
         None,
         TypeForm,
-        Ekata
+        Ekata,
+        Email
     }
 }

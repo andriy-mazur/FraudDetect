@@ -2,6 +2,7 @@ namespace FraudDetect.WebApi
 {
     using FraudDetect.Data;
     using FraudDetect.Interface;
+    using FraudDetect.Interface.Services;
     using FraudDetect.WebApi.Services;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,8 @@ namespace FraudDetect.WebApi
             //});
 
             services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
+            services.AddScoped<IDbLog, DbLog>();
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IBureauService, EkataService>();
             
 
