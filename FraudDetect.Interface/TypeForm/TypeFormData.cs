@@ -94,7 +94,8 @@
 
                 if (propertyType.Equals("email", StringComparison.InvariantCultureIgnoreCase) ||
                     propertyType.Equals("number", StringComparison.InvariantCultureIgnoreCase) ||
-                    propertyType.Equals("text", StringComparison.InvariantCultureIgnoreCase))
+                    propertyType.Equals("text", StringComparison.InvariantCultureIgnoreCase) ||
+                    propertyType.Equals("phone_number", StringComparison.InvariantCultureIgnoreCase))
                 {
                     result.FieldValue = obj[propertyType].Value<string>();
                 }

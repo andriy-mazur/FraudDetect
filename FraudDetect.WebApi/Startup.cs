@@ -30,6 +30,8 @@ namespace FraudDetect.WebApi
                 .AddApiExplorer()
                 .AddAuthorization();
 
+            services.AddControllers().AddNewtonsoftJson();
+
             //services.AddDbContext<FraudDetectDbContext>(options => {
             //    options.UseSqlServer(Configuration.GetConnectionString("FraudDetect"));
             //});

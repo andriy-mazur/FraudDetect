@@ -30,8 +30,13 @@
         }
 
         [HttpPost("typeform")]
-        public void TypeFormInput(string payload)
+        public void TypeFormInput([FromBody] object payloadObject)
         {
+            var payload = payloadObject.ToString();
+            
+            //TODO secure TypeForm  call
+            //  https://developer.typeform.com/webhooks/secure-your-webhooks/
+
             var date = DateTime.Now;
 
             dbLog.LogAsync(payload, SourceType.TypeForm, date);
@@ -41,7 +46,54 @@
             var bureauResult = bureauService.GetScoreAsync(request).Result;
 
             //TODO check if score == null
-            emailSender.SendEmail("support@idfeeler", "andriy.mazur@gmail.com",  "idFeeler. New  response for Check-in Form", $"Some  test text. Score: {bureauResult.Score ?? -1}");
+            emailSender.SendEmail("support@idfeeler.com", "andriy.mazur@gmail.com, russ@dwellson.com",  "idFeeler. New  response for Check-in Form", GetEmailText(request, bureauResult));
+        }
+
+        private string GetEmailText(Request request, Response response)
+        {
+            const string lowRiskColor = "#6AA84F";
+            const string midRiskColor = "#3C78D8";
+            const string highRiskColor = "#E06666";
+            const string lowRiskText = "Low Risk ( Consider Approval) - 0 to 200";
+            const string midRiskText = "Neutral Risk (Consider Manual Review) - 200 to 400";
+            const string highRiskText = "High Risk (Send to Manual Review) - 400 to 500";
+
+            string riskText;
+            string riskColor;
+
+            if (response.Score.HasValue && response.Score > 400)
+            {
+                riskText = highRiskText;
+                riskColor = highRiskColor;
+            }
+            else if (response.Score.HasValue && response.Score > 200)
+            {
+                riskText = midRiskText;
+                riskColor = midRiskColor;
+            }
+            else
+            {
+                riskText = lowRiskText;
+                riskColor = lowRiskColor;
+            }
+
+            riskText = response.Score.HasValue ? response.Score.ToString() + " - " + riskText : string.Empty;
+
+            var body = "<p>Your Check-in Form has a new report:</p><p><br />First name: <strong>{FirstName}</strong><br />Last name: <strong>{LastName}</strong><br />Cell phone: <strong>{Phone}</strong><br />Email address: <strong>{Email}</strong><br />Check-in: <strong>5 PM - 11.30 PM</strong><br />Check-out: <strong>Before 10 AM</strong><br />Identity Confirmation ID: <a href=\"http://aaa.com/1.jpg\">IMG_5444.jpg</a><br />Identity Confirmation Selfie&amp;ID: <a href=\"http://aaa.com/2.jpg\">IMG_5445.HEIC</a></p><h2><strong>Risk Score: <span style=\"color: {RiskColor};\">{RiskText}</span></strong></h2><p>Team IdFeeler, <br />Risk Intelligence<br /><sub>Confidentiality Note: This email may contain confidential and/or private information, communication privileged by law. If you received this e-mail in error, any review, use, dissemination, distribution, or copying of this e-mail is strictly prohibited. Please notify us immediately of the error by return e-mail and please delete this message from your system. Thank you in advance for your cooperation.</sub></p>";
+
+            body = SetEmailParam(body, "FirstName", request.FirstName);
+            body = SetEmailParam(body, "LastName", request.LastName);
+            body = SetEmailParam(body, "Phone", request.Phone);
+            body = SetEmailParam(body, "Email", request.Email);
+            body = SetEmailParam(body, "RiskColor", riskColor);
+            body = SetEmailParam(body, "RiskText", riskText);
+
+            return body;
+        }
+
+        private string SetEmailParam(string body, string paramName, string paramValue)
+        {
+            return body.Replace("{" + paramName + "}", paramValue, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private Request ParseAndGetRequest(string json, DateTime date)
