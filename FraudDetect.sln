@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FraudDetect.WebApi.Tests", "FraudDetect.WebApi.Tests\FraudDetect.WebApi.Tests.csproj", "{479D7C6A-C949-46E7-BEE6-25B4F7344EAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{65CBF251-B75B-4DBB-93DA-2E2554A70FC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65CBF251-B75B-4DBB-93DA-2E2554A70FC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65CBF251-B75B-4DBB-93DA-2E2554A70FC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{479D7C6A-C949-46E7-BEE6-25B4F7344EAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{479D7C6A-C949-46E7-BEE6-25B4F7344EAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{479D7C6A-C949-46E7-BEE6-25B4F7344EAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{479D7C6A-C949-46E7-BEE6-25B4F7344EAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
